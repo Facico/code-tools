@@ -1,0 +1,35 @@
+{
+	"ipdb": {
+		"prefix": "ipdb",
+		"body":[
+			"import pdb;pdb.set_trace()",
+		],
+	},
+    "impdb": {
+		"prefix": "impdb",
+		"body":[
+			"import pdb;pdb.multi_set_trace()",
+		],
+	},
+	"openjson": {
+		"prefix": "openjson",
+		"body": [
+			"with open(path, \"r\", encoding=\"utf-8\") as f:",
+			"	data = json.load(f)",
+		]
+	},
+	"savejson":{
+		"prefix": "savejson",
+		"body": [
+			"with open(path, \"w\", encoding=\"utf-8\") as f:",
+			"	json.dump(data, f, indent=2, ensure_acsii=False)"
+		]
+	},
+	"fordict":{
+		"prefix": "fordict",
+		"body": [
+			"for k, v in data.items():",
+			"	print(k)"
+		]
+	}
+}
