@@ -41,7 +41,7 @@
 		"prefix": "savejson",
 		"body": [
 			"with open(path, \"w\", encoding=\"utf-8\") as f:",
-			"	json.dump(data, f, indent=2, ensure_acsii=False)"
+			"	json.dump(data, f, indent=2, ensure_ascii=False)"
 		]
 	},
 	"fordict":{
@@ -49,6 +49,30 @@
 		"body": [
 			"for k, v in data.items():",
 			"	print(k)"
+		]
+	},
+	"makeparser":{
+		"prefix": "makeparser",
+		"body": [
+			"parser = argparse.ArgumentParser(add_help=False)",
+			"parser.add_argument(\"--wandb\", action=\"store_true\", default=False)",
+			"parser.add_argument(\"--litmodel_class\", type=str, default=\"TransformerLitModel\", choices=['a', 'b', 'c'])",
+			"parser.add_argument(\"--seed\", type=int, default=7)",
+			"args = parser.parse_args()"
+		]
+	},
+	"pdbmain":{
+		"prefix": "pdbmain",
+		"body": [
+			"try:"
+        	"	main()"
+			"except:"
+			"	import sys,pdb,bdb"
+			"	type, value, tb = sys.exc_info()"
+			"	if type == bdb.BdbQuit:"
+			"		exit()"
+			"	print(type,value)"
+			"	pdb.post_mortem(tb)"
 		]
 	}
 }
