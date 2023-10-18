@@ -1,0 +1,14 @@
+[Unit]
+Description=the common command after start
+After=network.target
+ 
+[Service]
+Type=forking
+ExecStart=bash /home/fanchenghao/hello.sh
+User=fanchenghao
+Restart=always
+RestartSec=60s
+StartLimitBurst=0
+
+[Install]
+WantedBy=multi-user.target
