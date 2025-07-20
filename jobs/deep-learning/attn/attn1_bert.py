@@ -14,7 +14,6 @@ def multi_head_attention(inputs, num_head, mask=None, ep=-1e20):
     Wq = nn.Linear(hidden_size, attention_head_size * num_head)
     Wk = nn.Linear(hidden_size, attention_head_size * num_head)
     Wv = nn.Linear(hidden_size, attention_head_size * num_head)
-    Wo = nn.Linear(hidden_size, hidden_size)
     dropout = nn.Dropout(0.1)
     
     queries = Wq(inputs)
@@ -36,12 +35,19 @@ def multi_head_attention(inputs, num_head, mask=None, ep=-1e20):
     outputs = torch.matmul(attention_weights, values)
     outputs = outputs.permute(0, 2, 1, 3).contiguous()
     outputs = outputs.view(batch_size, seq_len, hidden_size)
-    outputs = Wo(outputs)
     return outputs
 
+def selfoutput(inputs, num_head):
+    batch_size, seq_len, hidden_size = inputs.shape
+    Wo = nn.Linear(hidden_size, hidden_size)
+    dropout = nn.Dropout(0.1)
+    layernorm = nn.LayerNorm(hidden_size)
+    hidden_states = multi_head_attention(inputs, num_head)
+    output = inputs + dropout(layernorm(hidden_states))
+    return output
 
 
 batch_size, seq_len, hidden_size, num_head = 16, 20, 128, 5
 X = torch.rand((batch_size, seq_len, hidden_size))
-Y = multi_head_attention(X, 64)
+Y = selfoutput(X, 64)
 print(Y)

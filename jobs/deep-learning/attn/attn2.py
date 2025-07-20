@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math 
 #gqa
-def group_query_attention(inputs, q_num_head, kv_num_head):
+def group_query_attention(inputs, q_num_head, kv_num_head, mask=None, ep=-1e20):
     # X: [batch size, seq len, hidden size]
     def transpose_for_scores(x, num_head):
         new_shape = (x.shape[0], x.shape[1], num_head, x.shape[-1] // num_head)
@@ -38,6 +38,8 @@ def group_query_attention(inputs, q_num_head, kv_num_head):
     
     attention_scores = torch.matmul(queries, keys.transpose(-1, -2))
     attention_scores /= math.sqrt(attention_head_size)
+    if mask is not None:
+        attention_scores = attention_scores.masked_fill(mask==0, ep)
     attention_weights = F.softmax(attention_scores, dim=-1)
     
     outputs = torch.matmul(attention_weights, values)
